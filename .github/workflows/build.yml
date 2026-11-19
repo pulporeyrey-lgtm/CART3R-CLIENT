@@ -21,7 +21,6 @@ jobs:
       - name: Extract Android project
         run: |
           unzip CART3R_CLIENT_ANDROID_GITHUB.zip -d source
-          ls -la source
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -30,9 +29,11 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
 
-      - name: Install Android SDK
+      - name: Install SDK packages
         run: |
           sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
@@ -44,7 +45,7 @@ jobs:
       - name: Build APK
         run: |
           cd source/CART3R_CLIENT_ANDROID
-          gradle assembleDebug
+          gradle --no-daemon assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
